@@ -1,4 +1,73 @@
-import { Controller } from '@nestjs/common';
+import { Body, Controller, Delete, Logger } from '@nestjs/common';
+import { Get, Param, Post, Patch } from '@nestjs/common';
+import { ParseIntPipe, ValidationPipe } from '@nestjs/common';
+import { UsersService } from './users.service';
+import { User } from './user.entity';
+import { UserDto } from './dto/user.dto';
 
 @Controller('users')
-export class UsersController {}
+export class UsersController {
+  private logger = new Logger('UsersController');
+  constructor(private usersService: UsersService) {}
+
+  // SCOPE: retrieve all users
+  // ERROR HANDLING: performed in the service
+  // DETAILS: calls getUsers method in the users service
+  // RETURNS: a promise of an array of entity User
+  @Get()
+  getAllUsers(): Promise<User[]> {
+    this.logger.verbose('Retrieve all users');
+    return this.usersService.getUsers();
+  }
+
+  // SCOPE: to retrieve a user by id
+  // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe.
+  //                 Validation that the id actually exists in the db is done
+  //                 within the service
+  // DETAILS 1a: calls getUserById method in the users service
+  // RETURNS: a promise of an entity User
+  @Get('/:id')
+  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+    this.logger.verbose(`Retrieve a user by id`);
+    return this.usersService.getUserById(id);
+  }
+
+  // SCOPE: to create a new user
+  // ERROR HANDLING: The keys and values in the body are validated using a
+  //                 validation pipe to the UserDto.
+  //                 The keys must match otherwise an error is given since
+  //                 they do not have the @IsOptional decorator.
+  // DETAILS: calls createUser method in the users service
+  // RETURNS: a promise of an entity User
+  @Post()
+  createUser(@Body(ValidationPipe) userDto: UserDto): Promise<User> {
+    this.logger.verbose(`Create a new user`);
+    return this.usersService.createUser(userDto);
+  }
+
+  // SCOPE: request to delete a user
+  // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe
+  //                 Validation that the id actually exists in the db is done
+  //                 within the service
+  // DETAILS 1a: calls deleteUser method in the users service
+  // RETURNS: nothing, hence returns a void promise
+  @Delete('/:id')
+  deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
+    this.logger.verbose(`Delete a user.`);
+    return this.usersService.deleteUser(id);
+  }
+
+  // SCOPE: request to update the user
+  // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe
+  //                 Body is validated using a validation pipe to the UserDto
+  // DETAILS: calls updateUser method in the users service
+  // RETURNS: a promise of an entity User
+  @Patch('/:id')
+  updateUser(
+    @Param('id', ParseIntPipe) id: number,
+    @Body(ValidationPipe) userDto: UserDto,
+  ): Promise<User> {
+    this.logger.verbose(`Update a user`);
+    return this.usersService.updateUser(id, userDto);
+  }
+}
