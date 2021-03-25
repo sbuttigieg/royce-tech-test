@@ -32,18 +32,22 @@ export class UsersService {
     }
   }
 
-  async getUserById(id: number): Promise<User> {
+  async getUserById(id: number): Promise<User | void> {
     // SCOPE: returns the user that matches the id
     // ERROR HANDLING: if the user does not exist, NotFoundException is thrown
-    // DETAILS: uses the findOne method of the inbuilt Repository class
-    // RETURNS: a promise of an entity User
+    // DETAILS: uses the findOneOrFail method of the inbuilt Repository class
+    // RETURNS: a promise of an entity User or void if nothing is returned
     try {
-      const user = this.usersRepository.findOneOrFail({ id });
+      const user = await this.usersRepository
+        .findOneOrFail({ id })
+        .catch(() => {
+          throw new NotFoundException('Failed to get user');
+        });
       this.logger.debug(`User with id ${id} retrieved successfully`);
       return user;
     } catch (error) {
       this.logger.error(`Failed to get user with id ${id}`, error.stack);
-      throw new NotFoundException('Failed to get user');
+      throw error;
     }
   }
 
@@ -63,22 +67,33 @@ export class UsersService {
     //          The delete method returns an affected param that specifies
     //          the number of entities deleted
     // RETURNS: nothing, hence returns a void promise
-    const result = await this.usersRepository.delete({ id });
-    if (result.affected !== 0) {
+    try {
+      const result = await this.usersRepository.delete({ id });
+      if (result.affected === 0) {
+        throw new NotFoundException('Failed to delete user');
+      }
       this.logger.debug(`User with id ${id} deleted successfully`);
+    } catch (error) {
+      this.logger.error(`Failed to delete user with id ${id}`, error.stack);
+      throw error;
     }
-    this.logger.error(`Failed to delete user with id ${id}`);
-    throw new NotFoundException(`Failed to delete user with id ${id}`);
   }
 
-  async updateUser(id: number, userDto: UserDto): Promise<User> {
+  async updateUser(id: number, userDto: UserDto): Promise<User | void> {
     // SCOPE: updates the user
     // ERROR HANDLING: id is validated within the getUserById method.
     //                 body is validated in the controller.
     // DETAILS: user matching received id is retrieved with getUserById method
     //          logic for updating user is all in the repository
     // RETURNS: a promise of an entity user
-    const user = await this.getUserById(id);
-    return this.usersRepository.updateUser(user, userDto);
+    try {
+      const user = await this.getUserById(id);
+      if (user) {
+        return this.usersRepository.updateUser(user, userDto);
+      }
+    } catch (error) {
+      this.logger.error(`Failed to get user with id ${id}`, error.stack);
+      throw error;
+    }
   }
 }

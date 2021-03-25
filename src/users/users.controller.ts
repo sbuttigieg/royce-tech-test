@@ -25,9 +25,9 @@ export class UsersController {
   //                 Validation that the id actually exists in the db is done
   //                 within the service
   // DETAILS 1a: calls getUserById method in the users service
-  // RETURNS: a promise of an entity User
+  // RETURNS: a promise of an entity User or void if nothing is returned
   @Get('/:id')
-  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User> {
+  getUserById(@Param('id', ParseIntPipe) id: number): Promise<User | void> {
     this.logger.verbose(`Retrieve a user by id`);
     return this.usersService.getUserById(id);
   }
@@ -61,12 +61,12 @@ export class UsersController {
   // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe
   //                 Body is validated using a validation pipe to the UserDto
   // DETAILS: calls updateUser method in the users service
-  // RETURNS: a promise of an entity User
+  // RETURNS: a promise of an entity User or void if nothing is returned
   @Patch('/:id')
   updateUser(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) userDto: UserDto,
-  ): Promise<User> {
+  ): Promise<User | void> {
     this.logger.verbose(`Update a user`);
     return this.usersService.updateUser(id, userDto);
   }
