@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  InternalServerErrorException,
-  Logger,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { User } from './user.entity';
 import { UsersRepository } from './users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -19,17 +14,12 @@ export class UsersService {
 
   async getUsers(): Promise<User[]> {
     // SCOPE: returns all users in the db
-    // ERROR HANDLING: If query fails, internal server error is thrown
+    // ERROR HANDLING: none
     // DETAILS: uses the find method of the inbuilt Repository class
     // RETURNS: a promise of an array of entity User
-    try {
-      const users = this.usersRepository.find();
-      this.logger.debug('Get all users query successful');
-      return users;
-    } catch (error) {
-      this.logger.error('Failed to get all users', error.stack);
-      throw new InternalServerErrorException('Failed to get all users');
-    }
+    const users = this.usersRepository.find();
+    this.logger.debug('Get all users query successful');
+    return users;
   }
 
   async getUserById(id: number): Promise<User | void> {
