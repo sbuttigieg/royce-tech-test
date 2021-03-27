@@ -1,16 +1,11 @@
-#  Developer Test
+#  Royce Technology Test
 
 Be sure to read **all** of this document carefully, and follow the guidelines within.
 
-## Context
-
-Build a RESTful API that can `create/read/update/delete` user data from a persistence store.
-
-### User Model
-
+## User Model
 ```
 {
-  "id": "xxx",                  // user ID (must be unique)
+  "id": "xxx",                  // unique user ID
   "name": "backend test",       // user name
   "dob": "",                    // date of birth
   "address": "",                // user address
@@ -19,51 +14,50 @@ Build a RESTful API that can `create/read/update/delete` user data from a persis
   "updatedAt": ""               // user updated date
 }
 ```
+## Installation
+```
+git clone https://github.com/sbuttigieg/royce-tech-test
 
-### Functionality
+docker-compose up
+```
+## Start the app
+```
+# development mode (watch mode + see logger messages)
+npm run start:dev
 
-- The API should follow typical RESTful API design pattern.
-- The data should be saved in the DB.
-- Provide proper API documentation.
-- Proper error handling should be used.
+# production mode
+npm run start
+```
+## Test
+```
+# unit tests
+npm run test
 
-## What We Care About
+# e2e tests
+npm run test:e2e
 
-Use any libraries that you would normally use if this were a real production App. Please note: we're interested in your code & the way you solve the problem, not how well you can use a particular library or feature.
+# test coverage
+npm run test:cov
+```
+## Endpoints
+```
+# Get all users
+GET http://localhost:3000/users
 
-_We're interested in your method and how you approach the problem just as much as we're interested in the end result._
+# Get a use by user ID
+GET     http://localhost:3000/users/:id
 
-Here's what you should strive for:
+# Delete user by user ID
+DELETE  http://localhost:3000/users/:id
 
-- Good use of current Node.js & API design best practices.
-- Solid testing approach.
-- Extensible code.
+# Get address coordinates by user ID
+GET     http://localhost:3000/users/address/:id/
 
-If you have not been specifically asked, you may pick either `Implementation Path: Docker Containers` or `Implementation Path: Cloud-native` requirements below.
-
-## Implementation Path: Docker Containers
-
-### Basic Requirements
-
-  - Use Node.js `LTS` and any framework of your choice.
-  - Write concise and clear commit messages.
-  - Write clear **documentation** on how it has been designed and how to run the code.
-
-### Bonus
-
-  - Provide proper unit tests.
-  - Add a read only endpoint to fetch location information based off the user's address (use [NASA](https://api.nasa.gov/api.html) or [Mapbox](https://www.mapbox.com/api-documentation/) APIs)
-  - Use Docker containers.
-  - Utilize Docker Compose.
-  - Setup a CircleCI config to build/test/deploy the service.
-  - Leverage Terraform or other infrastructure management tooling to spin up needed resources.
-  - Providing an online demo is welcomed, but not required.
-## Q&A
-
-> Where should I send back the result when I'm done?
-
-Either put the project into a private repo or email it to me.
-
-> What if I have a question?
-
-Feel free to email me at joseph.griffin@roycetechnology.com
+# Create a new user
+POST    http://localhost:3000/users
+        Body name:  dob:    address:    description:
+        
+# Update user
+PATCH   http://localhost:3000/users/:id
+        Body name:  dob:    address:    description:
+```
