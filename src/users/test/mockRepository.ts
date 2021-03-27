@@ -3,7 +3,7 @@ export const mockUser = {
   id: 1,
   name: 'Stephen Buttigieg',
   dob: new Date('1988-03-21'),
-  address: '4, Triq-Klin Mgarr, MGR2241, Malta',
+  address: 'Triq-Klin Mgarr, MGR2241, Malta',
   description: 'Full stack developer',
   createdAt: '2021-03-25T08:29:40.192Z',
   updatedAt: '2021-03-25T08:29:40.192Z',

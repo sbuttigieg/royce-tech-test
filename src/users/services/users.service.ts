@@ -1,15 +1,27 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  NotFoundException,
+  HttpService,
+  HttpStatus,
+  HttpException,
+} from '@nestjs/common';
 import { User } from '../entities/user.entity';
 import { UsersRepository } from '../repositories/users.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserDto } from '../dto/user.dto';
+import { AxiosResponse } from 'axios';
 
 @Injectable()
 export class UsersService {
   private logger = new Logger('UsersService');
+  private baseUrl = 'https://api.mapbox.com/geocoding/v5/mapbox.places/';
+  private accessToken =
+    'pk.eyJ1Ijoic2J1dHRpZ2llZyIsImEiOiJja21zNTZnNTAwZWY2Mm9wbWwzNzNpZ2tiIn0.mJK5YQFHupaeCVsrsl7fYA';
   constructor(
     @InjectRepository(UsersRepository)
     private usersRepository: UsersRepository,
+    private readonly httpService: HttpService,
   ) {}
 
   async getUsers(): Promise<User[]> {
@@ -80,6 +92,40 @@ export class UsersService {
       const user = await this.getUserById(id);
       if (user) {
         return this.usersRepository.updateUser(user, userDto);
+      }
+    } catch (error) {
+      this.logger.error(`Failed to get user with id ${id}`, error.stack);
+      throw error;
+    }
+  }
+
+  async getUserAddress(id: number): Promise<AxiosResponse<any> | void> {
+    // SCOPE: gets the coordinates of the user address
+    // ERROR HANDLING: id is validated within the getUserById method.
+    // DETAILS: user matching received id is retrieved with getUserById method
+    //          the coordinates are retrieved by sending get request to mapbox
+    // RETURNS: an Axios response or void
+    try {
+      const user = await this.getUserById(id);
+      if (user) {
+        const formattedAddress = encodeURI(user.address);
+        const url =
+          this.baseUrl +
+          formattedAddress +
+          '.json?access_token=' +
+          this.accessToken;
+        return this.httpService
+          .get(url)
+          .toPromise()
+          .then((response) => {
+            return response.data.features[0].geometry;
+          })
+          .catch((error) => {
+            throw new HttpException(
+              error.message,
+              HttpStatus.INTERNAL_SERVER_ERROR,
+            );
+          });
       }
     } catch (error) {
       this.logger.error(`Failed to get user with id ${id}`, error.stack);

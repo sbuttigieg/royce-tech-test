@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UsersService } from '../services/users.service';
 import { UsersRepository } from '../repositories/users.repository';
 import { UserDto } from '../dto/user.dto';
-import { NotFoundException } from '@nestjs/common';
+import { HttpModule, NotFoundException } from '@nestjs/common';
 import { TestLogger } from './test.logger';
 import * as mockData from './mockRepository';
 
@@ -24,6 +24,7 @@ describe('UsersService', () => {
   // before each test create a test module
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [HttpModule],
       providers: [
         UsersService,
         { provide: UsersRepository, useFactory: mockUserRepository },
@@ -135,7 +136,7 @@ describe('UsersService', () => {
 
   // test UsersService.updateUser
   describe('updateUser', () => {
-    it('calls updateUser() from repository and deletes a user update it', async () => {
+    it('calls updateUser() from repository and updates a user', async () => {
       // create a mock getUserById()
       usersService.getUserById = jest.fn().mockResolvedValue(mockData.mockUser);
       // create a mock result for the updateUser method
@@ -175,6 +176,41 @@ describe('UsersService', () => {
       await expect(
         usersService.updateUser(1, mockData.mockUserDto),
       ).rejects.toThrow(new NotFoundException('Failed to get user'));
+    });
+  });
+
+  // test UsersService.getUserAddress
+  describe('getUserAddress', () => {
+    it('gets address coordinates for a user', async () => {
+      // mock result from httpService
+      const address = {
+        type: 'Point',
+        coordinates: [14.36639, 35.91972],
+      };
+      // create a mock getUserById()
+      usersService.getUserById = jest.fn().mockResolvedValue(mockData.mockUser);
+      // test that getUserById isn't called before calling updateUser
+      expect(usersService.getUserById).not.toHaveBeenCalled();
+      // call the usersService.getUserAddress
+      const result = await usersService.getUserAddress(1);
+      // test that getUserById has been called
+      expect(usersService.getUserById).toHaveBeenCalled();
+      // test that getUserById was called with the right parameters
+      expect(usersService.getUserById).toHaveBeenCalledWith(1);
+      // test that result is correct
+      expect(result).toEqual(address);
+    });
+
+    it('throws an error during getUserById', async () => {
+      // create a mock getTaskById() that throws an error
+      usersService.getUserById = jest
+        .fn()
+        .mockRejectedValueOnce(new NotFoundException('Failed to get user'));
+      // call the usersService.getUserAddress and test that the correct error is
+      // thrown when no user is found
+      await expect(usersService.getUserAddress(1)).rejects.toThrow(
+        new NotFoundException('Failed to get user'),
+      );
     });
   });
 });

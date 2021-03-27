@@ -11,6 +11,7 @@ const mockUserServices = () => ({
   createUser: jest.fn(),
   deleteUser: jest.fn(),
   updateUser: jest.fn(),
+  getUserAddress: jest.fn(),
 });
 
 describe('UsersController', () => {
@@ -94,6 +95,18 @@ describe('UsersController', () => {
       // test that result matches the output
       const result = await usersController.updateUser(1);
       expect(result).toEqual(mockData.mockUser);
+    });
+  });
+
+  describe('get user address', () => {
+    it('should show coordinates', async () => {
+      // create a mock result for the updateUser() method
+      usersService.getUserAddress.mockResolvedValue(
+        Promise.resolve('any'),
+      );
+      // test that result matches the output
+      const result = await usersController.getUserAddress(1);
+      expect(result).toEqual('any');
     });
   });
 });

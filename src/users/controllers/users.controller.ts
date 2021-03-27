@@ -4,6 +4,7 @@ import { ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { UsersService } from '../services/users.service';
 import { User } from '../entities/user.entity';
 import { UserDto } from '../dto/user.dto';
+import { AxiosResponse } from 'axios';
 
 @Controller('users')
 export class UsersController {
@@ -24,7 +25,7 @@ export class UsersController {
   // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe.
   //                 Validation that the id actually exists in the db is done
   //                 within the service
-  // DETAILS 1a: calls getUserById method in the users service
+  // DETAILS: calls getUserById method in the users service
   // RETURNS: a promise of an entity User or void if nothing is returned
   @Get('/:id')
   getUserById(@Param('id', ParseIntPipe) id: number): Promise<User | void> {
@@ -49,7 +50,7 @@ export class UsersController {
   // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe
   //                 Validation that the id actually exists in the db is done
   //                 within the service
-  // DETAILS 1a: calls deleteUser method in the users service
+  // DETAILS: calls deleteUser method in the users service
   // RETURNS: nothing, hence returns a void promise
   @Delete('/:id')
   deleteUser(@Param('id', ParseIntPipe) id: number): Promise<void> {
@@ -69,5 +70,19 @@ export class UsersController {
   ): Promise<User | void> {
     this.logger.verbose(`Update a user`);
     return this.usersService.updateUser(id, userDto);
+  }
+
+  // SCOPE: to retrieve address coordinates by id
+  // ERROR HANDLING: The id is validated to be a number with the ParseIntPipe.
+  //                 Validation that the id actually exists in the db is done
+  //                 within the service
+  // DETAILS: calls getUserById method in the users service
+  // RETURNS: a promise of an entity User or void if nothing is returned
+  @Get('/address/:id/')
+  getUserAddress(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<AxiosResponse | void> {
+    this.logger.verbose(`Retrieve address coordinates by id`);
+    return this.usersService.getUserAddress(id);
   }
 }

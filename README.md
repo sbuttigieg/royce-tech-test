@@ -17,6 +17,7 @@ Be sure to read **all** of this document carefully, and follow the guidelines wi
 ## Installation
 ```
 git clone https://github.com/sbuttigieg/royce-tech-test
+(use master branch)
 
 docker-compose up
 ```
