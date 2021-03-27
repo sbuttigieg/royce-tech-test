@@ -4,47 +4,7 @@ import { UsersRepository } from '../repositories/users.repository';
 import { UserDto } from '../dto/user.dto';
 import { NotFoundException } from '@nestjs/common';
 import { TestLogger } from './test.logger';
-
-// Create a mock user that to get
-const mockUser = {
-  id: 1,
-  name: 'Stephen Buttigieg',
-  dob: '2009-09-08T22:00:00.000Z',
-  address: '4, Triq-Klin Mgarr, MGR2241, Malta',
-  description: 'Full stack developer',
-  createdAt: '2021-03-25T08:29:40.192Z',
-  updatedAt: '2021-03-25T08:29:40.192Z',
-};
-
-// Create a mock user that to create
-const mockUserWrite = {
-  name: 'Stephen Buttigieg',
-  dob: new Date('1988-03-21'),
-  address: '4, Triq-Klin Mgarr, MGR2241, Malta',
-  description: 'Full stack developer',
-};
-
-// Create an array of mock users
-const mockUsers = [
-  {
-    id: 1,
-    name: 'Stephen Buttigieg',
-    dob: '2009-09-08T22:00:00.000Z',
-    address: '4, Triq-Klin Mgarr, MGR2241, Malta',
-    description: 'Full stack developer',
-    createdAt: '2021-03-25T08:29:40.192Z',
-    updatedAt: '2021-03-25T08:29:40.192Z',
-  },
-  {
-    id: 2,
-    name: 'Robert Abela',
-    dob: '2009-09-08T22:00:00.000Z',
-    address: 'Triq ta Tnella, Zejtun, Malta',
-    description: 'Prime Minister',
-    createdAt: '2021-03-25T08:29:40.192Z',
-    updatedAt: '2021-03-25T08:29:40.192Z',
-  },
-];
+import * as mockData from './mockRepository';
 
 // create a mock UserRepository with jest functions
 const mockUserRepository = () => ({
@@ -78,7 +38,9 @@ describe('UsersService', () => {
   describe('getUsers', () => {
     it('calls find() from the repository and retrieve all users', async () => {
       // create a mock result for the find() method
-      usersRepository.find.mockResolvedValue(Promise.resolve(mockUsers));
+      usersRepository.find.mockResolvedValue(
+        Promise.resolve(mockData.mockUsers),
+      );
       // test that find is not yet called
       expect(usersRepository.find).not.toHaveBeenCalled();
       // call usersService.getUserById
@@ -88,7 +50,7 @@ describe('UsersService', () => {
       // test that findOneOrFail was called with the right parameters
       expect(usersRepository.find).toHaveBeenCalledWith();
       // test that result is correct
-      expect(result).toEqual(mockUsers);
+      expect(result).toEqual(mockData.mockUsers);
     });
   });
 
@@ -97,7 +59,7 @@ describe('UsersService', () => {
     it('calls findOneOrFail() from the repository and retrieve a user', async () => {
       // create a mock result for the findOneOrFail() method
       usersRepository.findOneOrFail.mockResolvedValue(
-        Promise.resolve(mockUser),
+        Promise.resolve(mockData.mockUser),
       );
       // test that findOneOrFail is not yet called
       expect(usersRepository.findOneOrFail).not.toHaveBeenCalled();
@@ -108,7 +70,7 @@ describe('UsersService', () => {
       // test that findOneOrFail was called with the right parameters
       expect(usersRepository.findOneOrFail).toHaveBeenCalledWith({ id: 1 });
       // test that result is correct
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockData.mockUser);
     });
 
     it('throws error if user is not found', async () => {
@@ -125,9 +87,11 @@ describe('UsersService', () => {
   describe('createUser', () => {
     it('calls createUser() from repository and returns the new user', async () => {
       // Create a new mock user
-      const newUser: UserDto = mockUserWrite;
+      const newUser: UserDto = mockData.mockUserDto;
       // create a mock result for the createUser method
-      usersRepository.createUser.mockResolvedValue(Promise.resolve(mockUser));
+      usersRepository.createUser.mockResolvedValue(
+        Promise.resolve(mockData.mockUser),
+      );
       // test that createUser is not yet called
       expect(usersRepository.createUser).not.toHaveBeenCalled();
       // call the usersService.createUser
@@ -137,7 +101,7 @@ describe('UsersService', () => {
       // test that createUser was called with the right parameters
       expect(usersRepository.createUser).toHaveBeenCalledWith(newUser);
       // test that result is correct
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockData.mockUser);
     });
   });
 
@@ -163,7 +127,7 @@ describe('UsersService', () => {
         Promise.resolve({ affected: 0 }),
       );
       // test that the correct error is thrown when no user is deleted
-      expect(usersService.deleteUser(1, mockUser)).rejects.toThrow(
+      expect(usersService.deleteUser(1, mockData.mockUser)).rejects.toThrow(
         new NotFoundException(`Failed to delete user`),
       );
     });
@@ -173,30 +137,32 @@ describe('UsersService', () => {
   describe('updateUser', () => {
     it('calls updateUser() from repository and deletes a user update it', async () => {
       // create a mock getUserById()
-      usersService.getUserById = jest.fn().mockResolvedValue(mockUser);
+      usersService.getUserById = jest.fn().mockResolvedValue(mockData.mockUser);
       // create a mock result for the updateUser method
-      usersRepository.updateUser.mockResolvedValue(Promise.resolve(mockUser));
+      usersRepository.updateUser.mockResolvedValue(
+        Promise.resolve(mockData.mockUser),
+      );
       // test that getUserById isn't called before calling updateUser
       expect(usersService.getUserById).not.toHaveBeenCalled();
       // test that updateUser is not yet called
       expect(usersRepository.updateUser).not.toHaveBeenCalled();
       // call the usersService.updateUser
-      const result = await usersService.updateUser(1, mockUserWrite);
+      const result = await usersService.updateUser(1, mockData.mockUserDto);
       // test that getUserById has been called
       expect(usersService.getUserById).toHaveBeenCalled();
       // test that getUserById was called with the right parameters
       expect(usersService.getUserById).toHaveBeenCalledWith(1);
       // test that result is correct
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockData.mockUser);
       // test that updateUser has been called
       expect(usersRepository.updateUser).toHaveBeenCalled();
       // test that updateUser was called with the right parameters
       expect(usersRepository.updateUser).toHaveBeenCalledWith(
-        mockUser,
-        mockUserWrite,
+        mockData.mockUser,
+        mockData.mockUserDto,
       );
       // test that result is correct
-      expect(result).toEqual(mockUser);
+      expect(result).toEqual(mockData.mockUser);
     });
 
     it('throws an error during getUserById', async () => {
@@ -206,9 +172,9 @@ describe('UsersService', () => {
         .mockRejectedValueOnce(new NotFoundException('Failed to get user'));
       // call the usersService.updateUser and test that the correct error is
       // thrown when no user is found
-      await expect(usersService.updateUser(1, mockUserWrite)).rejects.toThrow(
-        new NotFoundException('Failed to get user'),
-      );
+      await expect(
+        usersService.updateUser(1, mockData.mockUserDto),
+      ).rejects.toThrow(new NotFoundException('Failed to get user'));
     });
   });
 });
