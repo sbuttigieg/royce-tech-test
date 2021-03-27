@@ -1,8 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { UsersService } from './users.service';
-import { UsersRepository } from './users.repository';
-import { UserDto } from './dto/user.dto';
+import { UsersService } from '../services/users.service';
+import { UsersRepository } from '../repositories/users.repository';
+import { UserDto } from '../dto/user.dto';
 import { NotFoundException } from '@nestjs/common';
+import { TestLogger } from './test.logger';
 
 // Create a mock user that to get
 const mockUser = {
@@ -68,8 +69,9 @@ describe('UsersService', () => {
         { provide: UsersRepository, useFactory: mockUserRepository },
       ],
     }).compile();
-    usersService = module.get<UsersService>(UsersService);
-    usersRepository = module.get<UsersRepository>(UsersRepository);
+    module.useLogger(TestLogger);
+    usersService = await module.get<UsersService>(UsersService);
+    usersRepository = await module.get<UsersRepository>(UsersRepository);
   });
 
   // test UsersService.getUsers
@@ -143,7 +145,7 @@ describe('UsersService', () => {
   describe('deleteUser', () => {
     it('calls delete() from repository and deletes a user', async () => {
       // create a mock result for the delete method
-      const mockResult = { raw: 'Test raw', affected: 1 };
+      const mockResult = { affected: 1 };
       usersRepository.delete.mockResolvedValue(Promise.resolve(mockResult));
       // test that delete is not yet called
       expect(usersRepository.delete).not.toHaveBeenCalled();
@@ -158,11 +160,11 @@ describe('UsersService', () => {
     it('throws an error if user is not found', () => {
       // create a mock result for the delete method that returns null
       usersRepository.delete.mockResolvedValue(
-        Promise.resolve({ raw: null, affected: 0 }),
+        Promise.resolve({ affected: 0 }),
       );
       // test that the correct error is thrown when no user is deleted
       expect(usersService.deleteUser(1, mockUser)).rejects.toThrow(
-        new NotFoundException(`Failed to delete use`),
+        new NotFoundException(`Failed to delete user`),
       );
     });
   });

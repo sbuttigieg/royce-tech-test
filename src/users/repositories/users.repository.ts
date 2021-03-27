@@ -1,7 +1,7 @@
 import { InternalServerErrorException, Logger } from '@nestjs/common';
-import { User } from './user.entity';
+import { User } from '../entities/user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { UserDto } from './dto/user.dto';
+import { UserDto } from '../dto/user.dto';
 
 @EntityRepository(User)
 export class UsersRepository extends Repository<User> {
@@ -12,9 +12,10 @@ export class UsersRepository extends Repository<User> {
     // ERROR HANDLING: Data checked with a validation pipe in the controller.
     //                 If saving fails, internal server error is thrown.
     // DETAILS: id, createdAt and updatedAt fields are automatically generated.
+    //          this.create() is used instead of new user for testing purposes
     //          The save method stores the data in the db
     // RETURNS: a promise of an entity User
-    const user = new User();
+    const user = this.create();
     const { name, dob, address, description } = userDto;
     user.name = name;
     user.dob = dob;
