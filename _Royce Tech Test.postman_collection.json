@@ -1,0 +1,303 @@
+{
+	"info": {
+		"_postman_id": "dadfc9e9-c740-4364-bbcd-1963ec895dd1",
+		"name": "_Royce Tech Test",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text"
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get All Users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get User",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete User",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get Coordinates",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text",
+							"disabled": true
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text",
+							"disabled": true
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/address/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"address",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update User",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "name",
+							"value": "The Brew",
+							"type": "text"
+						},
+						{
+							"key": "dob",
+							"value": "09-09-2000",
+							"type": "text"
+						},
+						{
+							"key": "address",
+							"value": "74 The Strand Tas-Sliema",
+							"type": "text"
+						},
+						{
+							"key": "description",
+							"value": "The Brew Bar & Grill",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:3000/users/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"users",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

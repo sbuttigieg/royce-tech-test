@@ -41,6 +41,8 @@ npm run test:e2e
 npm run test:cov
 ```
 ## Endpoints
+`_Royce Tech Test.postman_collection.json` can be used 
+for testing the following endpoints
 ```
 # Get all users
 GET http://localhost:3000/users
