@@ -41,26 +41,45 @@ npm run test:e2e
 npm run test:cov
 ```
 ## Endpoints
-`_Royce Tech Test.postman_collection.json` can be used 
-for testing the following endpoints
+Postman collections can be used to test the following endpoints
+```
+# remote server at aws
+_AWS_Royce Tech Test.postman_collection.json
+
+# local
+_Royce Tech Test.postman_collection.json
+``` 
+
 ```
 # Get all users
-GET http://localhost:3000/users
+GET     
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users
+http://localhost:3000/users
 
 # Get a use by user ID
-GET     http://localhost:3000/users/:id
+GET
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users/:id
+http://localhost:3000/users/:id
 
 # Delete user by user ID
-DELETE  http://localhost:3000/users/:id
+DELETE
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users/:id
+http://localhost:3000/users/:id
 
 # Get address coordinates by user ID
-GET     http://localhost:3000/users/address/:id/
+GET
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users/address/:id
+http://localhost:3000/users/address/:id/
 
 # Create a new user
-POST    http://localhost:3000/users
-        Body name:  dob:    address:    description:
+POST    
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users
+http://localhost:3000/users
+Body name:  dob:    address:    description:
         
 # Update user
-PATCH   http://localhost:3000/users/:id
-        Body name:  dob:    address:    description:
+PATCH   
+http://ec2-18-194-243-118.eu-central-1.compute.amazonaws.com/users/:id
+http://localhost:3000/users/:id
+Body name:  dob:    address:    description:
 ```
